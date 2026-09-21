@@ -145,6 +145,43 @@ Los errores del intérprete están en `src/mini_interprete/errores.py`:
 Los archivos en `tests/` son sus propios ejemplos: ábranlos antes de escribir
 la primera.
 
+### Si una prueba se queda en rojo
+
+**Nunca borren una prueba para que el pipeline pase.** Una prueba en rojo dice
+que el código está mal, no que la prueba estorbe. Borrarla no arregla nada:
+sólo hace que dejen de enterarse.
+
+Hay tres situaciones, y ninguna es borrar:
+
+| Situación | Qué hacer |
+|---|---|
+| La prueba encontró un defecto | **Arreglen el código.** Ése es el trabajo de la tarea |
+| Su expectativa estaba mal | Corrijan la prueba, y digan en `ANALISIS.md` contra qué renglón de la sección 7 la corrigieron |
+| Encontraron un defecto y **no** lograron arreglarlo | Márquenla con `xfail` y expliquen en `ANALISIS.md` qué intentaron |
+
+Para el tercer caso, `pytest` tiene una marca que significa *"sé que esto
+falla, y sé por qué"*:
+
+```python
+import pytest
+
+@pytest.mark.xfail(reason="agrupa mal al encadenar; no logramos corregirlo")
+def test_lo_que_no_pudimos_arreglar():
+    assert interpretar("...") == 42
+```
+
+```
+13 passed, 1 xfailed
+```
+
+La prueba se queda visible, el motivo queda escrito, y el pipeline **no** se
+pone en rojo por ella. Es exactamente lo que hace un equipo de verdad con un
+error conocido que todavía no puede resolver.
+
+> **Encontrar un defecto y documentarlo honestamente vale más que esconderlo.**
+> Una prueba marcada con `xfail` y bien explicada suma puntos. Una prueba
+> borrada no existe, y eso sí se nota al comparar su historial.
+
 ## 7. Semántica declarada
 
 Estas decisiones **ya están tomadas**. No son opinables, y las pruebas que
