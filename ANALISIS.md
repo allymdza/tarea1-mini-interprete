@@ -31,9 +31,16 @@
 | Etapa | Cómo se ve `(3 + 4) * 2` aquí |
 |---|---|
 | texto | `"(3 + 4) * 2"` |
-| tokens | `"Token(PAR_IZQ, (, 1)" "Token(NUMERO, 3, 2)" SIMBOLOS[MAS] + NUMERO4 SIMBOLOS[PAR_DER] ) SIMBOLOS[POR] * NUMERO 2` |
-| AST | |
-| resultado | |
+| tokens | `["Token(PAR_IZQ, (, 1)", "Token(NUMERO, 3, 2)", "Token(MAS, +, 4 )",  "Token(NUMERO, 4, 6)", "Token(PAR_DER, ), 5", "Token(POR, *, 8)", "Token(NUMERO, 2, 10)"]` |
+| AST |
+<pre>
+        *
+       / \
+      +   2
+     / \
+    3   4
+</pre>    
+| resultado |14 |
 
 > Para el renglón del AST, dibújenlo **primero ustedes** y después comprueben
 > con `python3 interprete.py --arbol "(3 + 4) * 2"`. Si su dibujo y el del
