@@ -1,7 +1,7 @@
 # Análisis — Tarea 1
 
 **Integrantes:**
-1.
+1. Campos Mendoza Alondra
 2.
 3.
 
@@ -19,10 +19,10 @@
 
 | Componente | Qué recibe | Qué entrega | De qué es responsable |
 |---|---|---|---|
-| `lexer` | | | |
-| `parser` | | | |
-| `ast` | | | |
-| `evaluator` | | | |
+| `lexer` | Recibe el texto, que en este caso, es la expresión numérica. | Devuelve la tokenización de la expresión en una lista, indicando si es un número o si es un operador | Se encarga justo, de la tokenización, es decir, es nuestro analizador léxico, les da significado a los caracteres para el lenguaje. |
+| `parser` | Recibe la lista de tokens que el analizador léxico ya hizo. | Construye un ast de la lista de tokens y lo devuelve. | Se encarga de crear una representación con sentido basándose en las reglas gramáticales que se le den, es el analizador sintáctico. |
+| `ast` | Recibe término a término lo de una operaación binaria o un número | Se encarga de construir los nodos del ast, dependiendo de si es un número o una operación binaria. | De darle "forma" al ast, y representar a nuestra expresión en este mismo ast |
+| `evaluator` |  Recibe los nodos del ast, es decir, los números y las operaciones | Devuelve el contenido de cada nodo, dependiendo de si es un número o una operación binaria, si es operación, muestra cuál operación es (suma, resta, división...) | Se encarga de mostrar que las operaciones tienen sentido, por ejemplo, cacha el caso de cuando intentamos dividir algo entre cero, y sabemos que eso no es posible, entonces lanza un error|
 
 ### 1.2 ¿Qué recorrido sigue una expresión desde que se recibe como texto hasta que produce un resultado?
 
