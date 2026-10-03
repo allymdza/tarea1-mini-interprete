@@ -21,8 +21,8 @@
 |---|---|---|---|
 | `lexer` | Recibe el texto, que en este caso, es la expresión numérica. | Devuelve la tokenización de la expresión en una lista, indicando si es un número o si es un operador | Se encarga justo, de la tokenización, es decir, es nuestro analizador léxico, les da significado a los caracteres para el lenguaje. |
 | `parser` | Recibe la lista de tokens que el analizador léxico ya hizo. | Construye un ast de la lista de tokens y lo devuelve. | Se encarga de crear una representación con sentido basándose en las reglas gramáticales que se le den, es el analizador sintáctico. |
-| `ast` | Recibe término a término lo de una operaación binaria o un número | Se encarga de construir los nodos del ast, dependiendo de si es un número o una operación binaria. | De darle "forma" al ast, y representar a nuestra expresión en este mismo ast |
-| `evaluator` |  Recibe los nodos del ast, es decir, los números y las operaciones | Devuelve el contenido de cada nodo, dependiendo de si es un número o una operación binaria, si es operación, muestra cuál operación es (suma, resta, división...) | Se encarga de mostrar que las operaciones tienen sentido, por ejemplo, cacha el caso de cuando intentamos dividir algo entre cero, y sabemos que eso no es posible, entonces lanza un error|
+| `ast` | Recibe término a término lo de una operación binaria o un número en forma de nodo, nodo que creó el parser. | Devuelve una representación en forma de árbol de la expresión | De darle "forma" al ast, y representar a nuestra expresión en este mismo ast, dándole la jerarquía necesaria. |
+| `evaluator` |  Recibe el nodo raíz del ast | Devuelve el resultado de una operación, o bien, el resultado de evaluar todo el ast | Se encarga de veriicar que las operaciones tienen sentido, por ejemplo, cacha el caso de cuando intentamos dividir algo entre cero, y sabemos que eso no es posible, entonces lanza un error, y de devolver el resultado al evaluar el ast |
 
 ### 1.2 ¿Qué recorrido sigue una expresión desde que se recibe como texto hasta que produce un resultado?
 
@@ -31,7 +31,7 @@
 | Etapa | Cómo se ve `(3 + 4) * 2` aquí |
 |---|---|
 | texto | `"(3 + 4) * 2"` |
-| tokens | |
+| tokens | `"Token(PAR_IZQ, (, 1)" "Token(NUMERO, 3, 2)" SIMBOLOS[MAS] + NUMERO4 SIMBOLOS[PAR_DER] ) SIMBOLOS[POR] * NUMERO 2` |
 | AST | |
 | resultado | |
 
