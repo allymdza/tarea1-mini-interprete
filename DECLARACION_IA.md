@@ -1,7 +1,9 @@
 # Declaración de uso de Inteligencia Artificial
 
-**Actividad:**
-**Integrantes:**
+**Actividad: Tarea 1**
+
+**Integrantes:Campos Mendoza Alondra**
+
 **Fecha:**
 
 > Esta declaración es obligatoria en toda tarea, práctica y en el proyecto final.
@@ -14,7 +16,7 @@
 ## 0. ¿Se usó IA en esta actividad?
 
 - [ ] **No.** Firmen la última sección y terminen. Con eso queda completa.
-- [ ] **Sí.** Contesten los cinco puntos.
+- [✔] **Sí.** Contesten los cinco puntos.
 
 ---
 
@@ -33,7 +35,7 @@
 
 | Para qué la usamos | En qué parte del entregable |
 |---|---|
-| | |
+|Para acomodar bien una tabla que se desfazaba del formato | En el archivo README, para la primera tabla |
 
 > Sean específicos. *"Para la tarea"* no dice nada.
 > *"Para generar las pruebas de `minimo_de_llaves`"* sí.
@@ -46,6 +48,7 @@ Textuales, tal como los escribieron. No los limpien ni los reescriban.
 
 ```
 (prompt 1)
+y si ahora quiero que esto se vea de que lindo, y no asi? (y le adjunte una captura de como se veía la tabla)
 ```
 
 ```
@@ -60,7 +63,7 @@ Textuales, tal como los escribieron. No los limpien ni los reescriban.
 
 | Qué produjo la herramienta | ¿Aceptado, modificado o descartado? | Por qué | Dónde quedó (archivo / commit) |
 |---|---|---|---|
-| | | | |
+|Produjo el código de la tabla 1.2 (no lo coloqué porque está muy extenso)|Aceptado y modificado|Aceptado porque se ve bien, modificado porque tuve que rellenar todo el apartado de tokens, pues no lo colocó la IA.|ANALISIS.md/|
 
 > **"Lo descartamos" es una respuesta excelente**, si dicen por qué.
 > Una declaración donde todo se aceptó sin cambios es una declaración que
@@ -82,6 +85,7 @@ Se les pidió intentarlo primero por su cuenta. Si lo hicieron así:
 > Si no usaron IA para el análisis, escriban *"no aplica"*.
 
 ### 4.2 ¿Cómo verificaron que lo que incorporaron era correcto?
+Prompt 1. Porque hay un comando en VSCode (ctrl k + v) para ver como luce el .md mientras trabajas en él, y vi que la tabla ya parecía tabla, entonces está correcto.
 
 > Una prueba que escribieron, una ejecución, un contraste contra las notas de
 > clase o contra el enunciado. *"Lo revisamos"* no es una verificación.
@@ -107,4 +111,4 @@ Se les pidió intentarlo primero por su cuenta. Si lo hicieron así:
 
 | Nombre | Número de cuenta |
 |---|---|
-| | |
+|Campos Mendoza Alondra|323143363|
