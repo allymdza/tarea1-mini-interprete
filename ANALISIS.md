@@ -28,19 +28,34 @@
 
 > Usen `(3 + 4) * 2` como ejemplo y muestren cómo se ve entre etapa y etapa.
 
-| Etapa | Cómo se ve `(3 + 4) * 2` aquí |
-|---|---|
-| texto | `"(3 + 4) * 2"` |
-| tokens | `["Token(PAR_IZQ, (, 1)", "Token(NUMERO, 3, 2)", "Token(MAS, +, 4 )",  "Token(NUMERO, 4, 6)", "Token(PAR_DER, ), 5", "Token(POR, *, 8)", "Token(NUMERO, 2, 10)"]` |
-| AST |
-<pre>
-        *
+<table>
+  <tr>
+    <th>Etapa</th>
+    <th>Cómo se ve <code>(3 + 4) * 2</code> aquí</th>
+  </tr>
+  <tr>
+    <td>texto</td>
+    <td><code>"(3 + 4) * 2"</code></td>
+  </tr>
+  <tr>
+    <td>tokens</td>
+    <td><code>["Token(PAR_IZQ, (, 0), Token(NUMERO, 3, 1), Token(MAS, +, 3 ), Token(NUMERO, 4, 5), Token(PAR_DER, ), 6), Token(POR, *, 8), Token(NUMERO, 2, 10)"]</code></td>
+  </tr>
+  <tr>
+    <td>AST</td>
+    <td>
+      <pre>        *
        / \
       +   2
      / \
-    3   4
-</pre>    
-| resultado |14 |
+    3   4</pre>
+    </td>
+  </tr>
+  <tr>
+    <td>resultado</td>
+    <td><code>14</code></td>
+  </tr>
+</table>
 
 > Para el renglón del AST, dibújenlo **primero ustedes** y después comprueben
 > con `python3 interprete.py --arbol "(3 + 4) * 2"`. Si su dibujo y el del
