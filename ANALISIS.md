@@ -90,6 +90,31 @@
 > qué combinación **no aparece nunca**.
 
 ### 2.2 ¿Qué comportamientos **no** estaban probados?
+Analizando y viendo las pruebas, hay algunos casos que no están contemplados, los enlisaré enseguida:
+
+- En el archivo `test_evaluator` encontré algunos casos, como estos:
+  1. Falta ver qué sucede cuando queremos dividir entre 0.
+  2. ¿Qué sucede cuando tenemos algo del estilo `-10 + 2`?
+  3. ¿Qué pasa cuando resto un número consigo mismo?
+  4. ¿Qué pasa si divido un número entre sí mismo?
+  5. ¿Y si tengo algo como num - num - num? ¿Cómo lo evaluo?
+
+- En el archivo `test_lexer` encontré otros, como estos:
+  1. ¿Cómo se tokeniza un número negativo?
+  2. ¿Qué posición debe tener si hay espacios? Por ejemplo:
+     - El número `" 42"`.
+     - El número `"42  "`.
+  3. Falta ver la tokenización de la multiplicación, la división, la resta y los paréntesis con una operación dentro.
+  4. ¿Qué pasa si tokenizo una operación con espacios en blanco?
+  5. Si los espacios no generan tokens, ¿qué sucede si introduzco una cadena vacía o solo un número negativo?
+  6. ¿Qué pasa si tengo algún símbolo como @?
+
+- En el archivo `test_parser` encontré estos casos:
+  1. Falta ver el árbol de las demás operaciones.
+  2. Falta ver el árbol de una expresión vacía.
+  3. ¿Que pasa si no cierro un paréntesis?
+  4. ¿Qué pasa si tengo algo como ++?
+
 
 > Ésta es la pregunta importante de toda la tarea. Tómense su tiempo.
 
