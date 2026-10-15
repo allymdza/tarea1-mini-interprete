@@ -70,7 +70,19 @@
 
 | Prueba | Componente | Comportamiento que verifica | ¿Cuántos operadores usa? | ¿Normal, frontera o inválida? |
 |---|---|---|---|---|
-| | | | | |
+|`test_suma`|evaluator|sume correctamente|uno, +|normal|
+|`test_resta`|evaluator|reste correctamente|uno, -|normal|
+|`test_multiplicacion`|evaluator|multiplique correctamente|uno, *|normal|
+|`test_division`|evaluator|divida correctamente|uno, /|normal|
+|`test_precendencia_sin_parentesis`|evaluator|que tome en cuenta un orden jerarquico, es decir, que ejecute las operaciones como toda la vida lo hemos hecho, y como no tiene parentésis, entonces se sigue el orden convencional|dos: +,*|normal|
+|`test_precedencia_con_parentesis`|evaluator|que primero realice las operaciones que se muestran dentro de los paréntesis y después realice las demás|tres, (), +, *|normal|
+|`test_tokeniza_un_numero_solo`|lexer|que tokenice los números como se supone que debe de hacerlo: tipo de token, que token es, que posición tiene|ninguno, pero si tomamos como operador a las funciones que llama, entonces una, que sería `tokenizar`|normal|
+|`test_tokeniza_una_suma`|lexer|que convierta la suma correctamente a tokens|el de la suma, pero también llama a la función tokenizar|normal|
+|`test_los_espacios_no_producen_tokens`|lexer|que el tamaño de la expresion sea el que ocupan los operadores y numeros, y esto se hace calculando el tamaño de la expresión, si coincide con el número de operadores  y operandos, entonces lo tokeniza los espacios|uno, la suma, pero nuevamente, llama la funcion `tokenizar`|normal|
+|`test_tokeniza_parentesis`|lexer|que tokenice debidamente los paréntesis con un número dentro de ellos|ninguno, pero llama a `tokenizar`|normal|
+|`test_construye_el_arbol_de_una_suma`|parser|que la suma esté bien hecha dentro de un arbol binario|uno, la suma, pero manda a llamar a operacion binaria de ast|normal|
+|`test_la_multiplicacion_se_agrupa_antes_que_la_suma`|parser|que exista la jerarquía en el arbol, es decir que si no hay parentésis, aplicamos la jerarquia que ya sabemos|dos, + y *, y llama a a funcion operacion binaria|normal|
+|`test_los_parentesis_cambian_la_agrupacion`|parser|qu primero se muestren las operaciones que están dentro del paréntesis y aparezca esa agrupacion en el arbol|tres, (),+,* y manda a llamar a operacion binaria|normal|
 
 > Llenen la tabla **completa**, con las 13. Es tediosa a propósito: la única
 > forma de saber qué no está cubierto es caracterizar sistemáticamente lo que
