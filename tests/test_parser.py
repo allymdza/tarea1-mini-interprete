@@ -12,6 +12,7 @@ def arbol_de(texto):
 def test_construye_el_arbol_de_una_suma():
     assert arbol_de("3 + 4") == OperacionBinaria("+", Numero(3), Numero(4))
 
+#de las demas op
 
 def test_la_multiplicacion_se_agrupa_antes_que_la_suma():
     # 3 + 4 * 2  debe agruparse como  3 + (4 * 2)

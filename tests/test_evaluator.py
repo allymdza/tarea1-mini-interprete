@@ -10,6 +10,8 @@ def test_suma():
 def test_resta():
     assert interpretar("10 - 3") == 7
 
+#falra ver, que pasa cuando el menos está primero, y cuando 
+# la resta es consigo mismo    
 
 def test_multiplicacion():
     assert interpretar("6 * 7") == 42
@@ -18,6 +20,7 @@ def test_multiplicacion():
 def test_division():
     assert interpretar("10 / 2") == 5
 
+#hay que ver que pasa si se divide entre cero y entre si misma    
 
 def test_precedencia_sin_parentesis():
     assert interpretar("3 + 4 * 2") == 11
