@@ -2,7 +2,7 @@
 
 **Integrantes:**
 1. Campos Mendoza Alondra
-2.
+2. Guadalupe Balanzar Ruth Sarai
 3.
 
 **Fork:**
@@ -22,7 +22,7 @@
 | `lexer` | Recibe el texto, que en este caso, es la expresión numérica. | Devuelve la tokenización de la expresión en una lista, indicando si es un número o si es un operador | Se encarga justo, de la tokenización, es decir, es nuestro analizador léxico, les da significado a los caracteres para el lenguaje. |
 | `parser` | Recibe la lista de tokens que el analizador léxico ya hizo. | Construye un ast de la lista de tokens y lo devuelve. | Se encarga de crear una representación con sentido basándose en las reglas gramáticales que se le den, es el analizador sintáctico. |
 | `ast` | Recibe término a término lo de una operación binaria o un número en forma de nodo, nodo que creó el parser. | Devuelve una representación en forma de árbol de la expresión | De darle "forma" al ast, y representar a nuestra expresión en este mismo ast, dándole la jerarquía necesaria. |
-| `evaluator` |  Recibe el nodo raíz del ast | Devuelve el resultado de una operación, o bien, el resultado de evaluar todo el ast | Se encarga de veriicar que las operaciones tienen sentido, por ejemplo, cacha el caso de cuando intentamos dividir algo entre cero, y sabemos que eso no es posible, entonces lanza un error, y de devolver el resultado al evaluar el ast |
+| `evaluator` |  Recibe el nodo raíz del ast | Devuelve el resultado de una operación, o bien, el resultado de evaluar todo el ast | Se encarga de verificar que las operaciones tienen sentido, por ejemplo, cacha el caso de cuando intentamos dividir algo entre cero, y sabemos que eso no es posible, entonces lanza un error, y de devolver el resultado al evaluar el ast |
 
 ### 1.2 ¿Qué recorrido sigue una expresión desde que se recibe como texto hasta que produce un resultado?
 
@@ -39,7 +39,7 @@
   </tr>
   <tr>
     <td>tokens</td>
-    <td><code>["Token(PAR_IZQ, (, 0), Token(NUMERO, 3, 1), Token(MAS, +, 3 ), Token(NUMERO, 4, 5), Token(PAR_DER, ), 6), Token(POR, *, 8), Token(NUMERO, 2, 10)"]</code></td>
+    <td><code>["Token(PAR_IZQ, "(", 0), Token(NUMERO, 3, 1), Token(MAS, "+", 3 ), Token(NUMERO, 4, 5), Token(PAR_DER, ")", 6), Token(POR, "*", 8), Token(NUMERO, 2, 10)"]</code></td>
   </tr>
   <tr>
     <td>AST</td>
@@ -90,7 +90,7 @@
 > qué combinación **no aparece nunca**.
 
 ### 2.2 ¿Qué comportamientos **no** estaban probados?
-Analizando y viendo las pruebas, hay algunos casos que no están contemplados, los enlisaré enseguida:
+Analizando y viendo las pruebas, hay algunos casos que no están contemplados, los enlistaré enseguida:
 
 - En el archivo `test_evaluator` encontré algunos casos, como estos:
   1. Falta ver qué sucede cuando queremos dividir entre 0.
@@ -126,7 +126,27 @@ Analizando y viendo las pruebas, hay algunos casos que no están contemplados, l
 
 | Prueba (archivo::nombre) | Entrada | Esperado | Categoría | ¿Por qué esa categoría? |
 |---|---|---|---|---|
-| | | | | |
+| test_evaluator | "10 / 0" | ErrorDeEvaluacion | Inválida | Se espera que el programa falle y notifique ese error con una excepción |
+| test_evaluator | "-10 + 2" | ErrorDeSintaxis | Inválida | De acuerdo a las reglas de gramática del programa, no se soportan números negativos. Lo correcto sería escribir "(0 - 10) + 2" |
+| test_evaluator | "5 - 5" | 0 | Normal | Es una operación básica que el programa debe lograr evaluar |
+| test_evaluator | "100 / 100" | 1 | Normal | Es una operación básica que el programa debe lograr evaluar |
+| test_evaluator | "3 - 3 - 3" | -3 | Frontera | Se espera que el programa realice la operación asociando por la izquierda y no por la derecha, es decir que realice "(3 - 3) - 3" y no "3 - (3 - 3)" |
+| test_evaluator | "(10 - 5 * 1) + (6 / 2 * (2 + 1 * (10 / 10)))" | 6 | Frontera | Tenemos varios paréntesis anidados y varias operaciones combinadas. Aqui observariamos si la jerarquía de operaciones se respeta correctamente |
+| test_evaluator | "5 / 2" | 2.5 | Frontera | Una división real con decimales debe poder ser evaluada correctamente, pues no quisieramos que el programa recorte esos datos adicionales de la división | 
+| test_lexer | "-1" | [Token(TipoToken.MENOS, "-", 0), Token(TipoToken.NUMERO, 1, 1)] | Normal | El lexer debería ser capaz de leer el texto y separarlo en tokens sin ningún problema |
+| test_lexer | "(4 - 2) / (2 * 1)" | [Token(TipoToken.PAR_IZQ, "(", 0), Token(TipoToken.NUMERO, 4, 1), Token(TipoToken.MENOS, "-", 3), Token(TipoToken.NUMERO, 2, 5), Token(TipoToken.PAR_DER, ")",6), Token(TipoToken.ENTRE, "/", 8), Token(TipoToken.PAR_IZQ, "(",10), Token(TipoToken.NUMERO, 2, 11), Token(TipoToken.POR, "*", 13), Token(TipoToken.NUMERO, 1, 14), Token(TipoToken.PAR_DER, ")", 15] | Normal | Son operaciones básicas con símbolos válidos y su lectura no debería presentar ningún problema |
+| test_lexer | " 3 + @" | [Token(NUMERO, 3, 0), Token(MAS, '+', 2)] | Normal | De acuerdo a como está implementado el lexer, este debería ignorar los símbolos extraños y no romperse |
+| test_lexer | " 42" | [Token(TipoToken.NUMERO, 42, 1)] | Frontera | El número debería considerarse con una posición distinta si hay un espacio inicial, es decir, "42" y " 42" no deben tener la misma posición |
+| test_lexer | "" | [] | Frontera | Queremos que el lexer pueda procesar correctamente una cadena vacía sin llegar a ciclarse o considerarlo como un error |
+| test_parser | "5 - 2" | OperacionBinaria("-", Numero(5), Numero(2)) | Normal | Verificamos la construcción de una operación básica |
+| test_parser | "4 * 3" | OperacionBinaria("*", Numero(4), Numero(3)) | Normal | Verificamos la construcción de una operación básica |
+| test_parser | " 8 / 2 | OperacionBinaria("/", Numero(8), Numero(2)) | Normal | Verificamos la construcción de una operación básica |
+| test_parser | "" | ErrorDeSintaxis | Inválida | El parser no debería poder construir la raíz del árbol de sintaxis al no recibir ningún token |
+| test_parser | "(3 + 4" | ErrorDeSintaxis |  Inválida | Se incumple la regla de tener un token de tipo PAR_DER de cierre para un token de tipo PAR_IZQ |
+| test_parser | "3 ++ 4" | ErrorDeSintaxis | Inválida | El parser tiene que esperar un token de tipo NUMERO o PAR_IZQ después de un operador unario, pues es lo que exige la gramática | 
+
+
+
 
 ---
 
