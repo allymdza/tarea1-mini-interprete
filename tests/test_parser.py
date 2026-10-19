@@ -26,6 +26,7 @@ def test_los_parentesis_cambian_la_agrupacion():
         "*", OperacionBinaria("+", Numero(3), Numero(4)), Numero(2)
     )
 
+
 #Añadimos las pruebas que planteamos
 
 def test_construye_arbol_de_una_resta():

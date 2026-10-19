@@ -15,21 +15,12 @@ def test_tokeniza_una_suma():
         Token(TipoToken.NUMERO, 4, 2),
     ]
 
-#falta ver la multi, la division, la resta y los parentesis en op
-#y si le pongo espacios?
-
-
 def test_los_espacios_no_producen_tokens():
     assert len(tokenizar("  3   +   4  ")) == 3
-
-#y si es una cadena vacia o un numero negativo    
-
 
 def test_tokeniza_parentesis():
     tipos = [token.tipo for token in tokenizar("(3)")]
     assert tipos == [TipoToken.PAR_IZQ, TipoToken.NUMERO, TipoToken.PAR_DER]
-
-#y si no hay nada dentro de los paréntesis
 
 # Añadimos las pruebas que planteamos
 def test_tokeniza_numero_negativo():
