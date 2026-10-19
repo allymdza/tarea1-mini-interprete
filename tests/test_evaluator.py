@@ -47,16 +47,17 @@ def test_division_numero_consigo_mismo():
     entrada = "100 / 100"
     assert interpretar(entrada) == 1
 
-# Encontramos que el parser no asocia a la izquierda con operadores de la misma precedencia
-# Asocia 3 - (3 - 3) en lugar de (3 - 3) - 3
-@pytest.mark.xfail(reason="asocia mal con operadores de la misma precedencia (por corregir)")
 def test_resta_precedencia_sin_parentesis():
     entrada = "3 - 3 - 3"
     assert interpretar(entrada) == -3
 
+def test_precedencia_sin_parentesis():
+    entrada = "3 - 3 + 3"
+    assert interpretar(entrada) == 3    
+
 def test_multiples_operaciones_y_parentesis_anidados():
     entrada = "(10 - 5 * 1) + (6 / 2 * (2 + 1 * (10 / 10)))"
-    assert interpretar(entrada) == 6
+    assert interpretar(entrada) == 14
     
 def test_division_resultado_con_decimal():
     entrada = " 5 / 2"
