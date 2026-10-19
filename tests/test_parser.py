@@ -25,3 +25,27 @@ def test_los_parentesis_cambian_la_agrupacion():
     assert arbol_de("(3 + 4) * 2") == OperacionBinaria(
         "*", OperacionBinaria("+", Numero(3), Numero(4)), Numero(2)
     )
+
+
+#Añadimos las pruebas que planteamos
+
+def test_construye_arbol_de_una_resta():
+    assert arbol_de("5 - 2") == OperacionBinaria("-", Numero(5), Numero(2))
+    
+def test_construye_arbol_de_una_multiplicacion():
+    assert arbol_de("4 * 3") == OperacionBinaria("*", Numero(4), Numero(3))
+
+def test_construye_arbol_de_una_division():
+    assert arbol_de("8 / 2") == OperacionBinaria("/", Numero(8), Numero(2))
+
+def test_error_construye_arbol_de_cadena_vacia():
+    with pytest.raises(ErrorDeSintaxis):
+        arbol_de("")
+    
+def test_error_falta_parentesis_de_cierre():
+    with pytest.raises(ErrorDeSintaxis):
+        arbol_de("(3 + 4")
+
+def test_error_operadores_consecutivos():
+    with pytest.raises(ErrorDeSintaxis):
+        arbol_de("3 ++ 4")

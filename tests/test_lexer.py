@@ -15,11 +15,48 @@ def test_tokeniza_una_suma():
         Token(TipoToken.NUMERO, 4, 2),
     ]
 
-
 def test_los_espacios_no_producen_tokens():
     assert len(tokenizar("  3   +   4  ")) == 3
-
 
 def test_tokeniza_parentesis():
     tipos = [token.tipo for token in tokenizar("(3)")]
     assert tipos == [TipoToken.PAR_IZQ, TipoToken.NUMERO, TipoToken.PAR_DER]
+
+# Añadimos las pruebas que planteamos
+def test_tokeniza_numero_negativo():
+    entrada = "-1"
+    assert tokenizar(entrada) == [
+        Token(TipoToken.MENOS, "-", 0), 
+        Token(TipoToken.NUMERO, 1, 1),
+        ]
+
+def test_tokeniza_operaciones_basicas_combinadas():
+    entrada = "(4 - 2) / (2 * 1)"
+    assert tokenizar(entrada) == [
+        Token(TipoToken.PAR_IZQ, "(", 0),
+        Token(TipoToken.NUMERO, 4, 1), 
+        Token(TipoToken.MENOS, "-", 3), 
+        Token(TipoToken.NUMERO, 2, 5), 
+        Token(TipoToken.PAR_DER, ")",6), 
+        Token(TipoToken.ENTRE, "/", 8), 
+        Token(TipoToken.PAR_IZQ, "(",10), 
+        Token(TipoToken.NUMERO, 2, 11), 
+        Token(TipoToken.POR, "*", 13), 
+        Token(TipoToken.NUMERO, 1, 15), 
+        Token(TipoToken.PAR_DER, ")", 16),
+        ]
+
+def test_tokeniza_simbolo_extranio():
+    entrada = "3 + @"
+    assert tokenizar(entrada) == [
+        Token(TipoToken.NUMERO, 3, 0), 
+        Token(TipoToken.MAS, "+", 2)
+        ]
+
+def test_tokeniza_numero_con_espacio_al_inicio():
+    entrada = " 42"
+    assert tokenizar(entrada) == [Token(TipoToken.NUMERO, 42, 1)]    
+
+def test_tokeniza_cadena_vacia():
+    entrada = ""
+    assert tokenizar(entrada) == []
