@@ -2,12 +2,7 @@
 
 **Integrantes:**
 1. Campos Mendoza Alondra
-<<<<<<< Updated upstream
-2.
-3.
-=======
 2. Guadalupe Balanzar Ruth Sarai
->>>>>>> Stashed changes
 
 **Fork:**
 
@@ -22,7 +17,7 @@
 | `lexer` | Recibe el texto, que en este caso, es la expresión numérica. | Devuelve la tokenización de la expresión en una lista, indicando si es un número o si es un operador | Se encarga justo, de la tokenización, es decir, es nuestro analizador léxico, les da significado a los caracteres para el lenguaje. |
 | `parser` | Recibe la lista de tokens que el analizador léxico ya hizo. | Construye un ast de la lista de tokens y lo devuelve. | Se encarga de crear una representación con sentido basándose en las reglas gramáticales que se le den, es el analizador sintáctico. |
 | `ast` | Recibe término a término lo de una operación binaria o un número en forma de nodo, nodo que creó el parser. | Devuelve una representación en forma de árbol de la expresión | De darle "forma" al ast, y representar a nuestra expresión en este mismo ast, dándole la jerarquía necesaria. |
-| `evaluator` |  Recibe el nodo raíz del ast | Devuelve el resultado de una operación, o bien, el resultado de evaluar todo el ast | Se encarga de veriicar que las operaciones tienen sentido, por ejemplo, cacha el caso de cuando intentamos dividir algo entre cero, y sabemos que eso no es posible, entonces lanza un error, y de devolver el resultado al evaluar el ast |
+| `evaluator` |  Recibe el nodo raíz del ast | Devuelve el resultado de una operación, o bien, el resultado de evaluar todo el ast | Se encarga de verificar que las operaciones tienen sentido, por ejemplo, cacha el caso de cuando intentamos dividir algo entre cero, y sabemos que eso no es posible, entonces lanza un error, y de devolver el resultado al evaluar el ast |
 
 ### 1.2 ¿Qué recorrido sigue una expresión desde que se recibe como texto hasta que produce un resultado?
 
@@ -37,7 +32,7 @@
   </tr>
   <tr>
     <td>tokens</td>
-    <td><code>["Token(PAR_IZQ, (, 0), Token(NUMERO, 3, 1), Token(MAS, +, 3 ), Token(NUMERO, 4, 5), Token(PAR_DER, ), 6), Token(POR, *, 8), Token(NUMERO, 2, 10)"]</code></td>
+    <td><code>["Token(PAR_IZQ, "(", 0), Token(NUMERO, 3, 1), Token(MAS, "+", 3 ), Token(NUMERO, 4, 5), Token(PAR_DER, ")", 6), Token(POR, "*", 8), Token(NUMERO, 2, 10)"]</code></td>
   </tr>
   <tr>
     <td>AST</td>
@@ -78,7 +73,7 @@
 |`test_los_parentesis_cambian_la_agrupacion`|parser|qu primero se muestren las operaciones que están dentro del paréntesis y aparezca esa agrupacion en el arbol|tres, (),+,* y manda a llamar a operacion binaria|normal|
 
 ### 2.2 ¿Qué comportamientos **no** estaban probados?
-Analizando y viendo las pruebas, hay algunos casos que no están contemplados, los enlisaré enseguida:
+Analizando y viendo las pruebas, hay algunos casos que no están contemplados, los enlistaré enseguida:
 
 - En el archivo `test_evaluator` encontré algunos casos, como estos:
   1. Falta ver qué sucede cuando queremos dividir entre 0.
