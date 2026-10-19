@@ -27,6 +27,10 @@ class Parser:
 
     def parsear(self):
         """Construye el AST de la lista de tokens."""
+        #si la cadena esta vacía, no hay arbol
+        if not self.tokens:
+            raise ErrorDeSintaxis("la expresión es vacía", 0)
+        
         return self._expresion()
 
     def _actual(self):
@@ -37,6 +41,12 @@ class Parser:
 
     def _avanzar(self):
         """Consume el token actual y lo regresa."""
+        #como _factor ya maneja el que se cierre el parentesis,busca ) en la expresion, 
+        #pero, como "se corta" y no aparece el simbolo, entonces da un error de indice, pues
+        #sigue buscando a ), pero la expresion ya terminó, entonces colocamos este caso, 
+        #para manejar lo descrito.
+        if self.pos >= len(self.tokens):
+            raise ErrorDeSintaxis("Debería de haber ')', la expresión está incompleta", self.pos)
         token = self.tokens[self.pos]
         self.pos += 1
         return token

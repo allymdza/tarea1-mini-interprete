@@ -61,4 +61,13 @@ def test_multiples_operaciones_y_parentesis_anidados():
 def test_division_resultado_con_decimal():
     entrada = " 5 / 2"
     assert interpretar(entrada) == pytest.approx(2.5)
+
+#encontramos estas otras pruebas
+def test_numeros():
+    entrada = "007"
+    assert interpretar(entrada) == 7  
+
+def test_menos_unario():
+    entrada = "(0 - 10) + 2"
+    assert interpretar(entrada) == -8 
     
