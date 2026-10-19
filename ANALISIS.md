@@ -112,13 +112,13 @@ Analizando y viendo las pruebas, hay algunos casos que no están contemplados, l
 | test_evaluator: test_division_numero_consigo_mismo() | "100 / 100" | 1 | Normal | Es una operación básica que el programa debe lograr evaluar |
 | test_evaluator: test_resta_precedencia_sin_parentesis() | "3 - 3 - 3" | -3 | Frontera | Se espera que el programa realice la operación asociando por la izquierda y no por la derecha, es decir que realice "(3 - 3) - 3" y no "3 - (3 - 3)" |
 |test evaluator: test_precedencia_sin_parentesis() | "3 - 3 + 3" | Frontera | Se espera que evalue de izquierda a derecha, dando como resultado 3 |
-| test_evaluator: test_multiples_operaciones_y_parentesis_anidados() | "(10 - 5 * 1) + (6 / 2 * (2 + 1 * (10 / 10)))" | 6 | Frontera | Tenemos varios paréntesis anidados y varias operaciones combinadas. Aqui observariamos si la jerarquía de operaciones se respeta correctamente |
+| test_evaluator: test_multiples_operaciones_y_parentesis_anidados() | "(10 - 5 * 1) + (6 / 2 * (2 + 1 * (10 / 10)))" | 14 | Frontera | Tenemos varios paréntesis anidados y varias operaciones combinadas. Aqui observariamos si la jerarquía de operaciones se respeta correctamente |
 | test_evaluator: test_division_resultado_con_decimal() | "5 / 2" | 2.5 | Frontera | Una división real con decimales debe poder ser evaluada correctamente, pues no quisieramos que el programa recorte esos datos adicionales de la división | 
 | test_ evaluator: test_numeros() | "007" | 7 | Frontera | Pues se espera que se considere como solo 7, es decir, que los 0's se ignoren.
 | test_ evaluator: test_menos_unario() | "(0 - 10) + 2" | -8 | Normal | De acuerdo con las reglas establecidas, no soporta los negativos como los conocemos, como se menciona en la prueba de `test_error_menos_unario`, entonces hicimos la prueba de como se debería de escribir el negativo, dandonos el resultado esperado.
 | test_lexer: test_tokeniza_numero_negativo() | "-1" | [Token(TipoToken.MENOS, "-", 0), Token(TipoToken.NUMERO, 1, 1)] | Normal | El lexer debería ser capaz de leer el texto y separarlo en tokens sin ningún problema |
 | test_lexer: test_tokeniza_operaciones_basicas_combinadas() | "(4 - 2) / (2 * 1)" | [Token(TipoToken.PAR_IZQ, "(", 0), Token(TipoToken.NUMERO, 4, 1), Token(TipoToken.MENOS, "-", 3), Token(TipoToken.NUMERO, 2, 5), Token(TipoToken.PAR_DER, ")",6), Token(TipoToken.ENTRE, "/", 8), Token(TipoToken.PAR_IZQ, "(",10), Token(TipoToken.NUMERO, 2, 11), Token(TipoToken.POR, "*", 13), Token(TipoToken.NUMERO, 1, 15), Token(TipoToken.PAR_DER, ")", 16] | Normal | Son operaciones básicas con símbolos válidos y su lectura no debería presentar ningún problema |
-| test_lexer: test_tokeniza_simbolo_extranio() | " 3 + @" | [Token(NUMERO, 3, 0), Token(MAS, '+', 2)] | Normal | De acuerdo a como está implementado el lexer, este debería ignorar los símbolos extraños y no romperse |
+| test_lexer: test_tokeniza_simbolo_extranio() | " 3 + @" | [Token(TipoToken.NUMERO, 3, 0), Token(TipoToken.MAS, '+', 2)] | Normal | De acuerdo a como está implementado el lexer, este debería ignorar los símbolos extraños y no romperse |
 | test_lexer: test_tokeniza_numero_con_espacio_al_inicio() | " 42" | [Token(TipoToken.NUMERO, 42, 1)] | Frontera | El número debería considerarse con una posición distinta si hay un espacio inicial, es decir, "42" y " 42" no deben tener la misma posición |
 | test_lexer: test_tokeniza_cadena_vacia() | "" | [] | Frontera | Queremos que el lexer pueda procesar correctamente una cadena vacía sin llegar a ciclarse o considerarlo como un error |
 | test_parser: test_construye_arbol_de_una_resta() | "5 - 2" | OperacionBinaria("-", Numero(5), Numero(2)) | Normal | Verificamos la construcción de una operación básica |
@@ -159,13 +159,25 @@ Porque las correcciones se hicieron para casos generales, no solo para esos caso
 
 ### 5.1 ¿Qué duplicación o señal de mal diseño encontraron?
 
-> Al menos dos. Usen el vocabulario de clase: duplicación, rigidez,
-> acoplamiento alto, condicionales repetidos, amplificación del cambio.
+- Lo primero que encontramos fue **rigidez estructural** en la implementación del parser. Esto porque el diseño tenía un comportamiento que iba contra la regla de asociar a la izquierda operadores de la misma precedencia. Lo que ocurría era que el parser estaba diseñado de tal forma que utilizaba llamadas recursivas que rompían esta regla básica y al querer corregir este error se volvía más tedioso buscar la falla dentro de llamadas a las funciones que se hacían. Por lo que corregir la función no bastaba con cambiar una variable o parámetro o condición, se necesitó rediseñar el algoritmo que implementaba el parser (Para corregir la asociatividad utilizamos un while en lugar de utilizar la recursividad original).
+
+
+- Otro mal diseño que encontramos fue también en el parser. Además de la **rigidez** ya mencionada, encontramos nuevamente esta situación en el método _avanzar(), que a su vez propiciaba a una **amplificación del cambio** pues el error que se encontró es que este método no verificaba correctamente si aún había algún token por leer y como consecuencia se rompía ante entradas vacías o paréntesis que no fueron cerrados; al no verificarse correctamente esta situación, saltaba un IndexError de Python que se propagaba a las demás funciones: _expresion(), _termino(), _factor(), y no nos permitía dar un error controlado (en este caso ErrorDeSintaxis).
+
 
 ### 5.2 ¿Qué refactorización realizaron, y por qué conserva el comportamiento?
 
-> "Las pruebas siguen pasando" es parte de la respuesta, pero no toda.
-> ¿Por qué el cambio es equivalente?
+- Para arreglar la parte de la asociatividad a la izquierda se hizo lo siguiente:
+Reemplazamos la recursividad rígida por un bloque `while` en la función `_expresion()` y `_termino()`. Al implementar este bucle pudimos acumular los operandos de izquierda a derecha (esto se ve representado en el código como `izquierda = OperacionBinaria(operador.valor, izquierda, derecha)`). Con ese arreglo el parser ya respeta la regla gramatical de asociatividad a la izquierda con operadores de la misma precedencia y además no se alteró al resto del programa.
+
+
+- La segunda parte que fue arreglar la validación para la función `_avanzar()`: 
+Rediseñamos esta función agregando las validaciones para los datos de entrada y consumo. La condicional`if not self.tokens` en la función `_parsear()` revisa si la lista de tokens está vacía (en este caso, si es vacía frena la ejecución y lanza el error), y la condicional `if self.pos >= len(self.tokens)` en la función `_avanzar()` vigila que en cada consumo o avance de posición no se rebase el tamaño total de la lista (nos ayudaría a detectar si una expresión está incompleta como en el caso de que un paréntesis no se cierre). Ambas correcciones ahora nos permiten ahora lanzar un `ErrorDeSintaxis` controlado para los casos en que necesitamos ver el error.
+
+
+Estas refactorizaciones conservan el comportamiento. En primer lugar, el cambio realizado con el bucle `while` sigue construyendo los nodos para el AST con la función OperaciónBinaria, pero con la correción de la asociatividad que se exigen en las reglas de gramática y no altera el resultado de las operaciones. 
+Lo segundo, el agregar las validaciones para los límites al momento de que se consumen los tokens solo verifica y controla los casos de errores evitando que ocurran desbordamientos que respondan con un error de Python. Esto no altera el flujo de ejecución del programa, se queda igual que antes pero ahora hacemos que el programa pueda lanzar un error de tipo `ErrorDeSintaxis` que se exige como un comportamiento más.
+
 
 ### 5.3 ¿Sería pertinente usar Factory Method, Adapter o ninguno?
 
