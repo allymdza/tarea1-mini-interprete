@@ -27,7 +27,12 @@ class Parser:
 
     def parsear(self):
         """Construye el AST de la lista de tokens."""
+        #si la cadena es vacía, no hay arbol.
+        if not self.tokens:
+            raise ErrorDeSintaxis("la cadena es vacía", 0)
         return self._expresion()
+
+    
 
     def _actual(self):
         """El token en la posicion actual, o None si ya no quedan."""
@@ -37,6 +42,13 @@ class Parser:
 
     def _avanzar(self):
         """Consume el token actual y lo regresa."""
+        #como _factor() ya maneja el que se cierre ek paréntesis como se debe,
+        #pero no manja cuando ) no aparece en la expresión, entonces da un error de
+        #indice, pues esta funcion sigue buscando el paréntesis, pero la expresión 
+        #ya terminó, entonces colocamos este caso para manejar cuando no esté el 
+        #paréntesis de cierre.
+        if self.pos >= len(self.tokens):
+            raise ErrorDeSintaxis("la expresion terminó, debería de haber ')'",self.pos)
         token = self.tokens[self.pos]
         self.pos += 1
         return token
