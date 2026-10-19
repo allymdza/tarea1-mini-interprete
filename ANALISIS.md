@@ -111,6 +111,7 @@ Analizando y viendo las pruebas, hay algunos casos que no están contemplados, l
 | test_evaluator: test_resta_numero_consigo_mismo()| "5 - 5" | 0 | Normal | Es una operación básica que el programa debe lograr evaluar |
 | test_evaluator: test_division_numero_consigo_mismo() | "100 / 100" | 1 | Normal | Es una operación básica que el programa debe lograr evaluar |
 | test_evaluator: test_resta_precedencia_sin_parentesis() | "3 - 3 - 3" | -3 | Frontera | Se espera que el programa realice la operación asociando por la izquierda y no por la derecha, es decir que realice "(3 - 3) - 3" y no "3 - (3 - 3)" |
+|test evaluator: test_precedencia_sin_parentesis() | "3 - 3 + 3" | Frontera | Se espera que evalue de izquierda a derecha, dando como resultado 3 |
 | test_evaluator: test_multiples_operaciones_y_parentesis_anidados() | "(10 - 5 * 1) + (6 / 2 * (2 + 1 * (10 / 10)))" | 6 | Frontera | Tenemos varios paréntesis anidados y varias operaciones combinadas. Aqui observariamos si la jerarquía de operaciones se respeta correctamente |
 | test_evaluator: test_division_resultado_con_decimal() | "5 / 2" | 2.5 | Frontera | Una división real con decimales debe poder ser evaluada correctamente, pues no quisieramos que el programa recorte esos datos adicionales de la división | 
 | test_ evaluator: test_numeros() | "007" | 7 | Frontera | Pues se espera que se considere como solo 7, es decir, que los 0's se ignoren.
@@ -145,9 +146,12 @@ Analizando y viendo las pruebas, hay algunos casos que no están contemplados, l
 
 | Defecto | Entrada que lo revela | Daba | Debería dar | Commit rojo | Commit verde |
 |---|---|---|---|---|---|
-| | | | | | |
+| No valida una expresión vacia | "" | Saltaba un error de tipo IndexError, aqui el parser no sabía manejarlo | Debería de dar ErrorDeSintaxis| 635e14c | bed184e |
+| Asocia mal | "3 - 3 - 3" y "3 - 3 + 3"| Para el primer caso, daba 3, y para el segundo caso, daba -3 | Debería de dar, para el primer caso -3, y para el segundo caso, 3 | da380fa | 082ed9d |
+| Lanza un IndexError cuando no está el parentesis de cierre | "(3 + 4" | Saltaba un error de IndexError | Debería de saltar un error de ErrorDeSintaxis | 635e14c | bed184e | 
 
 ### 4.4 ¿Cómo saben que la corrección es general y no sólo hace pasar ese ejemplo?
+Porque las correcciones se hicieron para casos generales, no solo para esos casos particulares, pues se modificó el código, es decir, desde "raíz" y por eso, por ejemplo, se añadió la prueba de "3 - 3 + 3", pues ambos operadores tienen la misma precedencia, entonces lo que hicimos en el código, no fue únicamente para un caso particular.
 
 ---
 
