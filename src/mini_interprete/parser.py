@@ -53,22 +53,23 @@ class Parser:
         self.pos += 1
         return token
 
+    #el anterior codigo como que agrupaba al revés, entonces lo cambiamo por un while, que
+    #agrupa de izquierda a derecha, si hay un operador con la misma precedencia, entonces
+    #lo agrupa como debería
     def _expresion(self):
         izquierda = self._termino()
-        actual = self._actual()
-        if actual is not None and actual.tipo in OPERADORES_SUMA:
+        while self._actual() is not None and self._actual().tipo in OPERADORES_SUMA:
             operador = self._avanzar()
-            derecha = self._expresion()
-            return OperacionBinaria(operador.valor, izquierda, derecha)
+            derecha = self._termino()
+            izquierda = OperacionBinaria(operador.valor, izquierda, derecha)
         return izquierda
 
     def _termino(self):
         izquierda = self._factor()
-        actual = self._actual()
-        if actual is not None and actual.tipo in OPERADORES_PRODUCTO:
+        while self._actual() is not None and self._actual().tipo in OPERADORES_PRODUCTO:
             operador = self._avanzar()
-            derecha = self._termino()
-            return OperacionBinaria(operador.valor, izquierda, derecha)
+            derecha = self._factor()
+            izquierda = OperacionBinaria(operador.valor, izquierda, derecha)
         return izquierda
 
     def _factor(self):
