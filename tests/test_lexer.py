@@ -1,12 +1,12 @@
 """Pruebas del lexer: del texto a los tokens."""
 
+import pytest
 from mini_interprete.lexer import tokenizar
 from mini_interprete.tokens import Token, TipoToken
 
 
 def test_tokeniza_un_numero_solo():
     assert tokenizar("42") == [Token(TipoToken.NUMERO, 42, 0)]
-
 
 def test_tokeniza_una_suma():
     assert tokenizar("3+4") == [
@@ -55,7 +55,7 @@ def test_tokeniza_simbolo_extranio():
 
 def test_tokeniza_numero_con_espacio_al_inicio():
     entrada = " 42"
-    assert tokenizar(entrada) == [Token(TipoToken.NUMERO, 42, 1)]    
+    assert tokenizar(entrada) == [Token(TipoToken.NUMERO, 42, 1)]
 
 def test_tokeniza_cadena_vacia():
     entrada = ""
