@@ -3,13 +3,8 @@
 **Integrantes:**
 1. Campos Mendoza Alondra
 2. Guadalupe Balanzar Ruth Sarai
-3.
 
 **Fork:**
-**Rama:**
-
-> Contesten en este archivo. Respuestas breves y concretas: se califica que
-> hayan entendido, no la extensión.
 
 ---
 
@@ -25,8 +20,6 @@
 | `evaluator` |  Recibe el nodo raíz del ast | Devuelve el resultado de una operación, o bien, el resultado de evaluar todo el ast | Se encarga de verificar que las operaciones tienen sentido, por ejemplo, cacha el caso de cuando intentamos dividir algo entre cero, y sabemos que eso no es posible, entonces lanza un error, y de devolver el resultado al evaluar el ast |
 
 ### 1.2 ¿Qué recorrido sigue una expresión desde que se recibe como texto hasta que produce un resultado?
-
-> Usen `(3 + 4) * 2` como ejemplo y muestren cómo se ve entre etapa y etapa.
 
 <table>
   <tr>
@@ -57,11 +50,6 @@
   </tr>
 </table>
 
-> Para el renglón del AST, dibújenlo **primero ustedes** y después comprueben
-> con `python3 interprete.py --arbol "(3 + 4) * 2"`. Si su dibujo y el del
-> programa no coinciden, uno de los dos está mal, y averiguar cuál es
-> justamente el trabajo.
-
 ---
 
 ## 2. Las pruebas que ya estaban
@@ -83,11 +71,6 @@
 |`test_construye_el_arbol_de_una_suma`|parser|que la suma esté bien hecha dentro de un arbol binario|uno, la suma, pero manda a llamar a operacion binaria de ast|normal|
 |`test_la_multiplicacion_se_agrupa_antes_que_la_suma`|parser|que exista la jerarquía en el arbol, es decir que si no hay parentésis, aplicamos la jerarquia que ya sabemos|dos, + y *, y llama a a funcion operacion binaria|normal|
 |`test_los_parentesis_cambian_la_agrupacion`|parser|qu primero se muestren las operaciones que están dentro del paréntesis y aparezca esa agrupacion en el arbol|tres, (),+,* y manda a llamar a operacion binaria|normal|
-
-> Llenen la tabla **completa**, con las 13. Es tediosa a propósito: la única
-> forma de saber qué no está cubierto es caracterizar sistemáticamente lo que
-> sí. Cuando terminen, léanla como columna, no como renglones, y pregúntense
-> qué combinación **no aparece nunca**.
 
 ### 2.2 ¿Qué comportamientos **no** estaban probados?
 Analizando y viendo las pruebas, hay algunos casos que no están contemplados, los enlistaré enseguida:
@@ -115,9 +98,6 @@ Analizando y viendo las pruebas, hay algunos casos que no están contemplados, l
   3. ¿Que pasa si no cierro un paréntesis?
   4. ¿Qué pasa si tengo algo como ++?
 
-
-> Ésta es la pregunta importante de toda la tarea. Tómense su tiempo.
-
 ---
 
 ## 3. Las pruebas que agregaron
@@ -126,38 +106,40 @@ Analizando y viendo las pruebas, hay algunos casos que no están contemplados, l
 
 | Prueba (archivo::nombre) | Entrada | Esperado | Categoría | ¿Por qué esa categoría? |
 |---|---|---|---|---|
-| test_evaluator | "10 / 0" | ErrorDeEvaluacion | Inválida | Se espera que el programa falle y notifique ese error con una excepción |
-| test_evaluator | "-10 + 2" | ErrorDeSintaxis | Inválida | De acuerdo a las reglas de gramática del programa, no se soportan números negativos. Lo correcto sería escribir "(0 - 10) + 2" |
-| test_evaluator | "5 - 5" | 0 | Normal | Es una operación básica que el programa debe lograr evaluar |
-| test_evaluator | "100 / 100" | 1 | Normal | Es una operación básica que el programa debe lograr evaluar |
-| test_evaluator | "3 - 3 - 3" | -3 | Frontera | Se espera que el programa realice la operación asociando por la izquierda y no por la derecha, es decir que realice "(3 - 3) - 3" y no "3 - (3 - 3)" |
-| test_evaluator | "(10 - 5 * 1) + (6 / 2 * (2 + 1 * (10 / 10)))" | 6 | Frontera | Tenemos varios paréntesis anidados y varias operaciones combinadas. Aqui observariamos si la jerarquía de operaciones se respeta correctamente |
-| test_evaluator | "5 / 2" | 2.5 | Frontera | Una división real con decimales debe poder ser evaluada correctamente, pues no quisieramos que el programa recorte esos datos adicionales de la división | 
-| test_lexer | "-1" | [Token(TipoToken.MENOS, "-", 0), Token(TipoToken.NUMERO, 1, 1)] | Normal | El lexer debería ser capaz de leer el texto y separarlo en tokens sin ningún problema |
-| test_lexer | "(4 - 2) / (2 * 1)" | [Token(TipoToken.PAR_IZQ, "(", 0), Token(TipoToken.NUMERO, 4, 1), Token(TipoToken.MENOS, "-", 3), Token(TipoToken.NUMERO, 2, 5), Token(TipoToken.PAR_DER, ")",6), Token(TipoToken.ENTRE, "/", 8), Token(TipoToken.PAR_IZQ, "(",10), Token(TipoToken.NUMERO, 2, 11), Token(TipoToken.POR, "*", 13), Token(TipoToken.NUMERO, 1, 14), Token(TipoToken.PAR_DER, ")", 15] | Normal | Son operaciones básicas con símbolos válidos y su lectura no debería presentar ningún problema |
-| test_lexer | " 3 + @" | [Token(NUMERO, 3, 0), Token(MAS, '+', 2)] | Normal | De acuerdo a como está implementado el lexer, este debería ignorar los símbolos extraños y no romperse |
-| test_lexer | " 42" | [Token(TipoToken.NUMERO, 42, 1)] | Frontera | El número debería considerarse con una posición distinta si hay un espacio inicial, es decir, "42" y " 42" no deben tener la misma posición |
-| test_lexer | "" | [] | Frontera | Queremos que el lexer pueda procesar correctamente una cadena vacía sin llegar a ciclarse o considerarlo como un error |
-| test_parser | "5 - 2" | OperacionBinaria("-", Numero(5), Numero(2)) | Normal | Verificamos la construcción de una operación básica |
-| test_parser | "4 * 3" | OperacionBinaria("*", Numero(4), Numero(3)) | Normal | Verificamos la construcción de una operación básica |
-| test_parser | " 8 / 2 | OperacionBinaria("/", Numero(8), Numero(2)) | Normal | Verificamos la construcción de una operación básica |
-| test_parser | "" | ErrorDeSintaxis | Inválida | El parser no debería poder construir la raíz del árbol de sintaxis al no recibir ningún token |
-| test_parser | "(3 + 4" | ErrorDeSintaxis |  Inválida | Se incumple la regla de tener un token de tipo PAR_DER de cierre para un token de tipo PAR_IZQ |
-| test_parser | "3 ++ 4" | ErrorDeSintaxis | Inválida | El parser tiene que esperar un token de tipo NUMERO o PAR_IZQ después de un operador unario, pues es lo que exige la gramática | 
-
-
-
+| test_evaluator: test_error_division_cero() | "10 / 0" | ErrorDeEvaluacion | Inválida | Se espera que el programa falle y notifique ese error con una excepción |
+| test_evaluator: test_error_menos_unario() | "-10 + 2" | ErrorDeSintaxis | Inválida | De acuerdo a las reglas de gramática del programa, no se soportan números negativos. Lo correcto sería escribir "(0 - 10) + 2" |
+| test_evaluator: test_resta_numero_consigo_mismo()| "5 - 5" | 0 | Normal | Es una operación básica que el programa debe lograr evaluar |
+| test_evaluator: test_division_numero_consigo_mismo() | "100 / 100" | 1 | Normal | Es una operación básica que el programa debe lograr evaluar |
+| test_evaluator: test_resta_precedencia_sin_parentesis() | "3 - 3 - 3" | -3 | Frontera | Se espera que el programa realice la operación asociando por la izquierda y no por la derecha, es decir que realice "(3 - 3) - 3" y no "3 - (3 - 3)" |
+| test_evaluator: test_multiples_operaciones_y_parentesis_anidados() | "(10 - 5 * 1) + (6 / 2 * (2 + 1 * (10 / 10)))" | 6 | Frontera | Tenemos varios paréntesis anidados y varias operaciones combinadas. Aqui observariamos si la jerarquía de operaciones se respeta correctamente |
+| test_evaluator: test_division_resultado_con_decimal() | "5 / 2" | 2.5 | Frontera | Una división real con decimales debe poder ser evaluada correctamente, pues no quisieramos que el programa recorte esos datos adicionales de la división | 
+| test_ evaluator: test_numeros() | "007" | 7 | Frontera | Pues se espera que se considere como solo 7, es decir, que los 0's se ignoren.
+| test_ evaluator: test_menos_unario() | "(0 - 10) + 2" | -8 | Normal | De acuerdo con las reglas establecidas, no soporta los negativos como los conocemos, como se menciona en la prueba de `test_error_menos_unario`, entonces hicimos la prueba de como se debería de escribir el negativo, dandonos el resultado esperado.
+| test_lexer: test_tokeniza_numero_negativo() | "-1" | [Token(TipoToken.MENOS, "-", 0), Token(TipoToken.NUMERO, 1, 1)] | Normal | El lexer debería ser capaz de leer el texto y separarlo en tokens sin ningún problema |
+| test_lexer: test_tokeniza_operaciones_basicas_combinadas() | "(4 - 2) / (2 * 1)" | [Token(TipoToken.PAR_IZQ, "(", 0), Token(TipoToken.NUMERO, 4, 1), Token(TipoToken.MENOS, "-", 3), Token(TipoToken.NUMERO, 2, 5), Token(TipoToken.PAR_DER, ")",6), Token(TipoToken.ENTRE, "/", 8), Token(TipoToken.PAR_IZQ, "(",10), Token(TipoToken.NUMERO, 2, 11), Token(TipoToken.POR, "*", 13), Token(TipoToken.NUMERO, 1, 15), Token(TipoToken.PAR_DER, ")", 16] | Normal | Son operaciones básicas con símbolos válidos y su lectura no debería presentar ningún problema |
+| test_lexer: test_tokeniza_simbolo_extranio() | " 3 + @" | [Token(NUMERO, 3, 0), Token(MAS, '+', 2)] | Normal | De acuerdo a como está implementado el lexer, este debería ignorar los símbolos extraños y no romperse |
+| test_lexer: test_tokeniza_numero_con_espacio_al_inicio() | " 42" | [Token(TipoToken.NUMERO, 42, 1)] | Frontera | El número debería considerarse con una posición distinta si hay un espacio inicial, es decir, "42" y " 42" no deben tener la misma posición |
+| test_lexer: test_tokeniza_cadena_vacia() | "" | [] | Frontera | Queremos que el lexer pueda procesar correctamente una cadena vacía sin llegar a ciclarse o considerarlo como un error |
+| test_parser: test_construye_arbol_de_una_resta() | "5 - 2" | OperacionBinaria("-", Numero(5), Numero(2)) | Normal | Verificamos la construcción de una operación básica |
+| test_parser: test_construye_arbol_de_una_multiplicacion() | "4 * 3" | OperacionBinaria("*", Numero(4), Numero(3)) | Normal | Verificamos la construcción de una operación básica |
+| test_parser: test_construye_arbol_de_una_division() | " 8 / 2 | OperacionBinaria("/", Numero(8), Numero(2)) | Normal | Verificamos la construcción de una operación básica |
+| test_parser: test_error_construye_arbol_de_cadena_vacia() | "" | ErrorDeSintaxis | Inválida | El parser no debería poder construir la raíz del árbol de sintaxis al no recibir ningún token |
+| test_parser: test_error_falta_parentesis_de_cierre() | "(3 + 4" | ErrorDeSintaxis |  Inválida | Se incumple la regla de tener un token de tipo PAR_DER de cierre para un token de tipo PAR_IZQ |
+| test_parser: test_error_operadores_consecutivos() | "3 ++ 4" | ErrorDeSintaxis | Inválida | El parser tiene que esperar un token de tipo NUMERO o PAR_IZQ después de un operador unario, pues es lo que exige la gramática | 
 
 ---
 
 ## 4. Los defectos
 
 ### 4.1 ¿Qué defecto reveló primero una prueba nueva?
+  * No manejaba como interpretar una expresión vacía.
+  * Asocia mal cuando tenemos la misma operación en la expresíon.
+  * Arrojaba IndexError cuando faltaba el paréntesis de cierre en una expresión que terminaba sin ese parentésis, cuando debía de lanzar un ErrorDeSintaxis.
 
 ### 4.2 ¿Por qué el comportamiento observado era incorrecto?
-
-> No basta con "daba mal". Digan contra qué lo están comparando: qué regla,
-> qué línea de la semántica declarada del README.
+  * Porque en el archivo `parser.py`, en la función `parsear()` no se manejaba el error en dónde tenemos una expresión vacía, pues si está vacía, no hay árbol. Va contra la regla 8 de la semántica, "entrada inválida".
+  * Debe de evaluar las operaciones de izquierda a derecha, y las evalua al revés, es decir, de derecha a izquierda. Va contra la regla 6 de la semántica, "asociatividad".
+  * Porque una expresión que termina sin cerrar el paréntesis está mal, pues nos quedamos esperando como algo más, o que el paréntesis se cierre, y como tal, debe de ser un error de sintaxis, pues está mal escrito, no un error de índice, pues no estamos tocandolos en esta parte. Va contra la regla 8 de la semántica, "entrada inválida".
 
 ### 4.3 ¿Qué cambio realizaron?
 
