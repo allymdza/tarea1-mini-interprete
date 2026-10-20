@@ -180,14 +180,22 @@ Lo segundo, el agregar las validaciones para los límites al momento de que se c
 
 
 ### 5.3 ¿Sería pertinente usar Factory Method, Adapter o ninguno?
+Realmente no conviene utilizar ninguno.
 
-> Justifiquen. **"Ninguno" puede ser la respuesta correcta.** Si dicen que sí,
-> digan qué problema concreto resuelve y qué costo tiene. Si dicen que no,
-> digan qué tendría que cambiar en el sistema para que empezara a convenir.
+Este mini interprete no tiene un alcance tan grande, ya que nos limitamos a una serie de reglas fijas. Si quisieramos usar, por ejemplo, Factory Method, sería en el caso de que extendiéramos el interprete a soportar distintos lenguajes o reglas gramaticales, no sería exclusivo para operaciones aritméticas básicas. Si aplicaramos este patrón de diseño al sistema actual sería rebuscar la implementación e inclusive volverla mucho más compleja para lo que es, pues los objetos que utilizamos se crean directamente (como Numero(token.valor) u OperacionBinaria()) porque ya sabemos previamente a qué clase pertenece cada objeto.
+Implementar Adapter tampoco sería conviente, pues no tenemos el caso de usar interfaces incompatibles entre sí. Lo aplicaríamos en el caso de que si, por ejemplo, para no implementar un lexer desde cero, nos apoyaramos de alguna biblioteca externa que haga el proceso del análisis léxico pero que en lugar de darnos una lista de tokens tenga como salida algo diferente, en este caso habría conflictos con nuestro Parser y ahí si convendría utilizar este patrón de diseño.
 
 ### 5.4 ¿Qué parte del sistema sería más difícil de modificar si se agregara un operador nuevo?
-
 > Por ejemplo `%`. ¿Cuántos archivos hay que tocar? ¿Por qué?
+
+El sistema actual presenta un alto grado de acoplamiento, pues si agregaramos este nuevo operador, no bastaría con simplemente añadir alguna función. Modificar una sola parte de algún archivo requeriría cambiar los demás.
+1. En el archivo token.py se debería definir un nuevo tipo de token/enum para la nueva operación (algo como MODULO por ejemplo).
+2. En lexer.py también deberíamos modificar la parte de los símbolos que el lexer reconoce (TipoToken.MODULO y su representanción "%" por ejemplo).
+3. en parser.py, es la parte más dificil. Primero, al introducir este nuevo operador hay que decidir cual es su nivel de jerarquía dentro de la  gramática. A partir de ahí se decide si agregarlo a OPERADORES_SUMA u OPERADORES_PRODUCTO o crear una nueva clasificación si fuese necesario. Luego habría que modificar el código para que el parser consuma el token correctamente y sepa como construir el ast.
+4. Por ultimo en evaluator.py hay que añadir como debe evaluarse este operador. Y también manejar los errores que puedan presentarse.
+
+Vemos que se esto conlleva a realizar cambios en todo el sistema. Modificar o agregar una operación en el programa requiere hacer un cambio "en cadena" siguiendo la lógica de ejecución.
+
 
 ---
 
