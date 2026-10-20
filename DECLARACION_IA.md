@@ -26,6 +26,7 @@
 
 | Herramienta | Versión o modelo, si lo saben |
 |---|---|
+| Gemini |Gemini 2.5 Flash|
 | Gemini | |
 
 
@@ -61,7 +62,7 @@ Realicé una prueba unitaria para que ver que el parser soporte cadenas vacías,
 
 | Qué produjo la herramienta | ¿Aceptado, modificado o descartado? | Por qué | Dónde quedó (archivo / commit) |
 |---|---|---|---|
-|Produjo el código de la tabla 1.2 (no lo coloqué porque está muy extenso)|Aceptado y modificado|Aceptado porque se ve bien, modificado porque tuve que rellenar todo el apartado de tokens, pues no lo colocó la IA.|ANALISIS.md/|
+|Produjo el código de la tabla 1.2 (no lo coloqué porque está muy extenso)|Aceptado y modificado|Aceptado porque se ve bien, modificado porque tuve que rellenar todo el apartado de tokens, pues no lo colocó la IA.|ANALISIS.md/a74476c|
 | Me explicó cual era el flujo de ejecución de por qué fallaba la prueba, un pequeño resumen: "Cuando le pasas una cadena vacía "", el lexer regresa correctamente una lista vacía de tokens []. El parser recibe esa lista vacía e intenta parsearla llamando a _expresion() -> _termino() -> _factor() -> _avanzar(). Dentro de _avanzar(), el código intenta leer el token actual haciendo self.tokens[self.pos] sin verificar si la posición ya rebasó el tamaño de la lista. Como la lista está vacía ([]), salta un IndexError: list index out of range de Python en lugar de lanzar el controlado ErrorDeSintaxis que tú estabas esperando con pytest.raises(ErrorDeSintaxis)."| Aceptado pero no modifqué nada ya que solo buscaba razonar el fallo de dicha prueba. | Luego de la explicación que obtuve, pude ver con mayor claridad donde debía manejarse de forma diferente la implementación del parser. Y la prueba la marqué con .xfail para que se supiera que fallaba. | ninguno |
 
 
@@ -81,6 +82,7 @@ Prompt 2. Al volver a analizar el código que tenía que no me era tan intuitivo
 ### 5.1 ¿Qué limitación concreta observaron **en esta actividad**?
 En cuánto al uso de IA, ninguna de las integrantes tuvo problemas para la ayuda o retroalimentación que se pidió.
 ### 5.2 ¿Qué harían distinto la próxima vez?
+No aplica.
 
 ---
 
